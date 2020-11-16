@@ -6,44 +6,41 @@ const app = express();
 const token =
   "esfeyJ1c2VySWQiOiJiMDhmODZhZi0zNWRhLTQ4ZjItOGZhYi1jZWYzOTA0NUIhkufemQifQ";
 
-let nextId = 7;
+let nextId = 4;
 
-let friends = [
+let classes = [
   {
     id: 1,
-    username: "Rachel Green",
-    password: "abcd",
-    role: "instructor",
+    name: "class 1",
+    type: "yoga",
+    time: `${new Date().toUTCString()}`,
+    duration: "1 hour",
+    intensity: "5",
+    location: "Tampa, FL",
+    numOfAttendies: "10",
+    maxSize: "18",
   },
   {
     id: 2,
-    username: "Joey Tribbiani",
-    password: "abcd",
-    role: "customer",
+    name: "class 2",
+    type: "MMA",
+    time: `${new Date().toUTCString()}`,
+    duration: "1 hour",
+    intensity: "5",
+    location: "Tampa, FL",
+    numOfAttendies: "10",
+    maxSize: "18",
   },
   {
     id: 3,
-    username: "Chandler Bing",
-    password: "abcd",
-    role: "customer",
-  },
-  {
-    id: 4,
-    name: "Ross Geller",
-    password: "abcd",
-    role: "customer",
-  },
-  {
-    id: 5,
-    name: "Monica Bing",
-    password: "abcd",
-    role: "instructor",
-  },
-  {
-    id: 6,
-    name: "Phoebe Buffay-Hannigan",
-    password: "abcd",
-    role: "customer",
+    name: "class 3",
+    type: "crossfit",
+    time: `${new Date().toUTCString()}`,
+    duration: "1 hour",
+    intensity: "5",
+    location: "Tampa, FL",
+    numOfAttendies: "10",
+    maxSize: "18",
   },
 ];
 
@@ -84,16 +81,6 @@ app.post("/api/login", (req, res) => {
       .status(403)
       .json({ error: "Username or Password incorrect. Please see Readme" });
   }
-  // if (username === "asdf" && password === "asdf") {
-  //   req.loggedIn = true;
-  //   res.status(200).json({
-  //     payload: token,
-  //   });
-  // } else {
-  //   res
-  //     .status(403)
-  //     .json({ error: "Username or Password incorrect. Please see Readme" });
-  // }
 });
 
 app.post("/api/register", (req, res) => {
@@ -106,55 +93,56 @@ app.post("/api/register", (req, res) => {
   res.send({ payload: token });
 });
 
-app.get("/api/friends", authenticator, (req, res) => {
+app.get("/api/classes", authenticator, (req, res) => {
   setTimeout(() => {
-    res.send(friends);
+    res.send(classes);
   }, 1000);
 });
 
-app.get("/api/friends/:id", authenticator, (req, res) => {
-  const friend = friends.find((f) => f.id == req.params.id);
+app.get("/api/classes/:id", authenticator, (req, res) => {
+  const cls = classes.find((f) => f.id == req.params.id);
 
-  if (friend) {
-    res.status(200).json(friend);
+  if (cls) {
+    res.status(200).json(cls);
   } else {
-    res.status(404).send({ msg: "Friend not found" });
+    res.status(404).send({ msg: "Class not found" });
   }
 });
 
-app.post("/api/friends", authenticator, (req, res) => {
-  const friend = { id: getNextId(), ...req.body };
+app.post("/api/classes", authenticator, (req, res) => {
+  const cls = { id: getNextId(), ...req.body };
+  console.log(cls);
 
-  friends = [...friends, friend];
+  friends = [...classes, cls];
 
-  res.send(friends);
+  res.send(classes);
 });
 
-app.put("/api/friends/:id", authenticator, (req, res) => {
+app.put("/api/classes/:id", authenticator, (req, res) => {
   const { id } = req.params;
 
-  const friendIndex = friends.findIndex((f) => f.id == id);
+  const clsIndex = classes.findIndex((c) => c.id == id);
 
-  if (friendIndex > -1) {
-    const friend = { ...friends[friendIndex], ...req.body };
+  if (clsIndex > -1) {
+    const cls = { ...classes[clsIndex], ...req.body };
 
-    friends = [
-      ...friends.slice(0, friendIndex),
-      friend,
-      ...friends.slice(friendIndex + 1),
+    classes = [
+      ...classes.slice(0, clsIndex),
+      cls,
+      ...classes.slice(clsIndex + 1),
     ];
-    res.send(friends);
+    res.send(classes);
   } else {
     res.status(404).send({ msg: "Friend not found" });
   }
 });
 
-app.delete("/api/friends/:id", authenticator, (req, res) => {
+app.delete("/api/classes/:id", authenticator, (req, res) => {
   const { id } = req.params;
 
-  friends = friends.filter((f) => f.id !== Number(id));
+  classes = classes.filter((c) => c.id !== Number(id));
 
-  res.send(friends);
+  res.send(classes);
 });
 
 function getNextId() {
