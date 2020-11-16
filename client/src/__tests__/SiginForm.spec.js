@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 
 import SigninForm from "../components/SigninForm";
 
-describe("Unit/Integration Testing for SigninForm component", () => {
+describe("Unit Testing for SigninForm component", () => {
   it("should respond to user input and clear on submit", () => {
     const { getByTestId } = render(<SigninForm />);
 
